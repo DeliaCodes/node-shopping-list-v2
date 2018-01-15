@@ -48,6 +48,19 @@ app.post('/shopping-list', jsonParser, (req, res) => {
   const item = ShoppingList.create(req.body.name, req.body.budget);
   res.status(201).json(item);
 });
+app.post('/recipes', jsonParser, (req, res) => {
+  const requiredFields = ['name', 'ingredients', 'instructions'];
+  for (let i = 0; i < requiredFields.length; i++) {
+    const field = requiredFields[i];
+    if (!(field in req.body)) {
+      const message = `Missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  const newRecipe = Recipes.create(req.body.name, req.body.ingredients, req.body.instructions);
+  res.status(201).json(newRecipe);
+});
 
 
 app.get('/recipes', (req, res) => {
